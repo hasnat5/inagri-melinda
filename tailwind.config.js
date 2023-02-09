@@ -9,8 +9,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'primary6': '#94D60A',
+        'primary1': '#F8FFE9',
         'primary2': '#E8FFB8',
+        'primary6': '#94D60A',
       },
       fontFamily: {
         labelReguler: ['labelReguler'],

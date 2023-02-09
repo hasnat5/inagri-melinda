@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { StatusBar } from 'expo-status-bar';
 
-const ScanScreen = () => {
+const ScanScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
     const [hasPermission, setHasPermission] = useState(null);
@@ -61,6 +61,10 @@ const ScanScreen = () => {
         )
     }
 
+    const pindah = () => {
+        navigation.navigate('Katalog')
+    }
+
     return (
         <View
             className='h-screen'
@@ -82,7 +86,7 @@ const ScanScreen = () => {
             <View className='absolute bg-red-400 mx-auto bottom-14'>
                 <Text>ScanScreen</Text>
                 <Text className='text-xl m-5'>{text}</Text>
-                {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+                {scanned && navigation.navigate('Katalog') && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
             </View>
 
 

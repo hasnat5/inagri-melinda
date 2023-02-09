@@ -1,7 +1,7 @@
 // import { StatusBar } from 'expo-status-bar';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react'
-import { Alert, Dimensions, FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native'
+import { Alert, Button, FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // DATA PRODUK
@@ -118,7 +118,7 @@ const ArticleCard = ({ gambar, tanggal, judul }) => (
 )
 
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
     const FlatListItemSeparator = () => {
@@ -153,18 +153,19 @@ const HomeScreen = () => {
                 {/* PROFILE PIC */}
                 <View className='flex-row justify-between items-center my-2'>
                     {/* USER PROFILE */}
-                    <View className='flex-row items-center left-4 gap-2'>
+                    <Pressable className='flex-row items-center left-4 gap-2' onPress={() => navigation.navigate('Login')}>
                         <Image
                             className="rounded-full h-9 w-9"
                             source={{
                                 uri: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
                             }}
                         />
+
                         <View>
-                            <Text className="font-labelSemiBold text-xs text-white">Selamat Datang, Farhan</Text>
+                            <Text className="font-labelSemiBold text-xs text-white">Selamat Datang, Hasnat</Text>
                             <Text className="font-labelReguler text-[8px] text-white" style={{ lineHeight: 12 }}>085321667443</Text>
                         </View>
-                    </View>
+                    </Pressable>
 
                     {/* APP LOGO */}
                     <View className='flex-row items-center gap-1 right-4'>
@@ -201,7 +202,7 @@ const HomeScreen = () => {
                     {/* INFORMASI POIN */}
                     <View className='flex-row gap-4 px-4 pb-4'>
                         {/* reward  mijan */}
-                        <View style={{ boxShadow: '0px 0px 8px #010101' }} className='shadow-sm flex-1 p-3 rounded-lg'>
+                        <View className='shadow-sm flex-1 p-3 rounded-lg'>
                             <View className='flex-row items-center gap-1 mb-1'>
                                 <Image className='w-4 h-4' source={require('../assets/icon/Point.png')} />
                                 <Text className='font-labelMedium text-xs text-primary6'>Reward Mijan</Text>
@@ -211,7 +212,7 @@ const HomeScreen = () => {
                         </View>
 
                         {/* kontribusi mijan */}
-                        <View style={{ boxShadow: '0px 0px 8px #010101' }} className='shadow-sm flex-1 p-3 rounded-lg'>
+                        <View className='shadow-sm flex-1 p-3 rounded-lg'>
                             <View className='flex-row items-center gap-1 mb-1'>
                                 <Image className='w-4 h-4' source={require('../assets/icon/Kontribusi.png')} />
                                 <Text className='font-labelMedium text-xs text-primary6'>Kontribusi Mijan</Text>
@@ -221,12 +222,11 @@ const HomeScreen = () => {
                         </View>
                     </View>
 
-                    {/* 3 MENU */}
-                    <View style={{ boxShadow: "1px 3px 1px #9E9E9E" }} className='flex-row rounded-lg shadow-sm mx-4 mb-4'>
-                        <View className='flex-1 justify-center items-center py-3'>
-                            <Image className='h-6 w-6' source={require('../assets/icon/Lokasi.png')} />
-                            <Text className='text-[10px] font-labelMedium mt-1'>Lokasi</Text>
-                        </View>
+                    {/* 2 MENU */}
+                    <View
+                        className='shadow-sm flex-row rounded-lg mx-4 mb-4'
+
+                    >
                         <View className='flex-1 justify-center items-center py-3'>
                             <Image className='h-6 w-6' source={require('../assets/icon/Tukar.png')} />
                             <Text className='text-[10px] font-labelMedium mt-1'>Petunjuk Tukar Poin</Text>

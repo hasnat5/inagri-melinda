@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { Alert, Button, Dimensions, FlatList, Image, Pressable, Text, TextInput, View } from 'react-native'
+import React, { useLayoutEffect, useState } from 'react'
+import { Alert, FlatList, Image, Pressable, Text, TextInput, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Modal, { ReactNativeModal } from "react-native-modal";
-import ExtraDimensions from 'react-native-extra-dimensions-android';
+import Modal from "react-native-modal";
 
 const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
@@ -57,19 +56,10 @@ const DATA = [
 
 ];
 
-const deviceWidth = Dimensions.get("window").width;
-const deviceHeight =
-    Platform.OS === "ios"
-        ? Dimensions.get("window").height
-        : require("react-native-extra-dimensions-android").get(
-            "REAL_WINDOW_HEIGHT"
-        );
 
 
-
-const CatalogScreen = () => {
+const CatalogScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
-    const [selectedValue, setSelectedValue] = useState("java");
 
     const [isModalVisible, setModalVisible] = useState(false);
 
@@ -86,7 +76,7 @@ const CatalogScreen = () => {
     }
 
     const ProductCard = ({ gambar, jenis, nama, poin, ditukar }) => (
-        <View style={[{ flex: 1 }, DATA % 2 == 0 ? { marginRight: 16 } : { marginLeft: 16 }]} className="bg-white  rounded-lg h-auto w-full overflow-hidden">
+        <View style={[{ flex: 1 }, DATA % 2 == 0 ? { marginRight: 16 } : { marginLeft: 16 }]} className="shadow-sm bg-white rounded-lg h-auto w-full overflow-hidden">
             <Image
                 className="self-center h-44 w-44 max-w-full max-h-full"
                 source={gambar}
@@ -104,7 +94,6 @@ const CatalogScreen = () => {
 
                 <Pressable
                     className="bg-primary6 py-2 mt-2 rounded items-center justify-center"
-                    // onPress={createThreeButtonAlert}
                     onPress={toggleModal}
 
                 >
@@ -116,6 +105,7 @@ const CatalogScreen = () => {
         </View >
     );
 
+
     return (
         <View
             style={{
@@ -123,13 +113,11 @@ const CatalogScreen = () => {
                 paddingTop: insets.top,
                 paddingBottom: insets.bottom,
             }}
-            className='h-screen'
+            className='h-full bg-white'
         >
 
             {/* MODAL */}
             <Modal
-                deviceWidth={deviceWidth}
-                deviceHeight={deviceHeight}
                 isVisible={isModalVisible}
                 className='absolute items-center right-0 left-0 top-1/3'
                 onBackdropPress={() => setModalVisible(false)}>
@@ -144,14 +132,21 @@ const CatalogScreen = () => {
                             <Text className='font-labelReguler text-[10px] text-white text-center' style={{ lineHeight: 12 }}>Batalkan</Text>
                         </Pressable>
 
-                        <Pressable className='py-2 rounded flex-1 border border-primary6' onPress={toggleModal}>
+                        <Pressable className='py-2 rounded flex-1 border border-primary6'
+                            onPress={() => {
+                                setModalVisible(!isModalVisible);
+                                Alert.alert('Penukaran Berhasil', 'Pertukaran 100 Poin', [
+                                    { text: 'Kembali ke beranda', onPress: () => navigation.navigate('Beranda') },
+                                ])
+                            }} >
                             <Text className='font-labelReguler text-primary6 text-[10px] text-center' style={{ lineHeight: 12 }}>Ya</Text>
                         </Pressable>
 
                     </View>
                 </View>
-            </Modal>
+            </Modal >
 
+            {/* SEARCH */}
             <View className='px-4 mb-2.5'>
 
                 <View className='flex-row justify-center items-center bg-white px-2.5 py-1 my-2.5 border border-[#D2D2D2] rounded'>
@@ -221,7 +216,7 @@ const CatalogScreen = () => {
 
 
             <StatusBar style="auto" />
-        </View>
+        </View >
     )
 }
 

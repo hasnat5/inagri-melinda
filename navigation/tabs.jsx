@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useLayoutEffect } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import CatalogScreen from '../screens/CatalogScreen';
 import HomeScreen from '../screens/HomeScreen';
@@ -19,7 +20,13 @@ const CustomTabBarButton = ({ children, onPress }) => (
     </Pressable>
 )
 
-const Tabs = () => {
+const Tabs = ({ navigation }) => {
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerShown: false,
+        });
+    }, [])
+
     return (
         <Tab.Navigator
             initialRouteName={HomeScreen}
@@ -50,7 +57,7 @@ const Tabs = () => {
                                 style={{
                                     width: 24,
                                     height: 24,
-                                    tintColor: focused ? '#61876E' : '#D2D2D2',
+                                    tintColor: focused ? '#94D60A' : '#D2D2D2',
                                 }}
                             />
                             <Text className="mt-1 font-labelReguler" style={{ color: focused ? 'black' : '#D2D2D2', fontSize: 8, lineHeight: 12 }}>Beranda</Text>
@@ -92,7 +99,7 @@ const Tabs = () => {
                                 style={{
                                     width: 24,
                                     height: 24,
-                                    tintColor: focused ? '#61876E' : '#D2D2D2',
+                                    tintColor: focused ? '#94D60A' : '#D2D2D2',
                                 }}
                             />
                             <Text className="mt-1 font-labelReguler" style={{ color: focused ? 'black' : '#D2D2D2', fontSize: 8, lineHeight: 12 }}>Katalog</Text>

@@ -1,9 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import * as SplashScreen from 'expo-splash-screen';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import Tabs from './navigation/tabs'
 import { useEffect } from 'react';
+import Login from './screens/Login';
+import Register from './screens/Register';
+import { NativeBaseProvider } from "native-base";
+
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -31,12 +36,20 @@ export default function App() {
   //   SplashScreen.hideAsync()
   // }`
 
+  const Stack = createNativeStackNavigator();
+
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Tabs />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <NativeBaseProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Tabs">
+            <Stack.Screen name="Tabs" component={Tabs} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </NativeBaseProvider>
 
   );
 }
