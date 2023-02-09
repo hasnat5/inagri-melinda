@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import { NativeBaseProvider } from "native-base";
+import ProfileScreen from './screens/ProfileScreen';
 
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
           <Stack.Navigator initialRouteName="Tabs">
             <Stack.Screen name="Tabs" component={Tabs} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="Register" component={Register} />
           </Stack.Navigator>
         </NavigationContainer>

@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Checkbox from 'expo-checkbox';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Login = ({ navigation }) => {
     const insets = useSafeAreaInsets();

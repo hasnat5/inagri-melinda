@@ -153,7 +153,7 @@ const HomeScreen = ({ navigation }) => {
                 {/* PROFILE PIC */}
                 <View className='flex-row justify-between items-center my-2'>
                     {/* USER PROFILE */}
-                    <Pressable className='flex-row items-center left-4 gap-2' onPress={() => navigation.navigate('Login')}>
+                    <Pressable className='flex-row items-center left-4 gap-2' onPress={() => navigation.navigate('Profile')}>
                         <Image
                             className="rounded-full h-9 w-9"
                             source={{
