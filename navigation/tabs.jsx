@@ -4,6 +4,7 @@ import { Image, Pressable, Text, View } from 'react-native';
 import CatalogScreen from '../screens/CatalogScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ScanScreen from '../screens/ScanScreen';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Tab = createBottomTabNavigator();
 
@@ -68,7 +69,24 @@ const Tabs = ({ navigation }) => {
 
             <Tab.Screen name="Scan QR" component={ScanScreen}
                 options={{
-
+                    headerShown: true,
+                    headerStyle: {
+                        backgroundColor: '#fff',
+                    },
+                    headerTintColor: '#94D60A',
+                    headerTitleStyle: {
+                        fontFamily: 'labelBold',
+                        fontSize: 16,
+                        // textAlign: 'center'
+                    },
+                    headerLeft: () => (
+                        <Pressable
+                            className='ml-4'
+                            onPress={() => navigation.navigate('Beranda')}
+                        >
+                            <Icon name='arrow-left' size={24} color='#D2D2D2' />
+                            {/* <Text>halofsdfksdjklksfjkdsjf</Text> */}
+                        </Pressable>),
                     tabBarIcon: () => (
                         <View className='items-center justify-center'>
                             <Image
@@ -84,7 +102,9 @@ const Tabs = ({ navigation }) => {
                     ),
                     tabBarButton: (props) => (
                         <CustomTabBarButton {...props} />
-                    )
+                    ),
+
+                    tabBarStyle: { display: 'none' }
 
                 }}
             />

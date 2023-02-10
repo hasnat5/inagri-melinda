@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, Button } from 'react-native'
+import { Text, View, Button, Pressable, ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { StatusBar } from 'expo-status-bar';
 
 const ScanScreen = ({ navigation }) => {
-    const insets = useSafeAreaInsets();
+    // const insets = useSafeAreaInsets();
 
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
@@ -37,8 +37,8 @@ const ScanScreen = ({ navigation }) => {
             <View
                 style={{
                     // Paddings to handle safe area
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
+                    // paddingTop: insets.top,
+                    // paddingBottom: insets.bottom,
                 }}>
 
                 <Text>Requesting for camera permission</Text>
@@ -51,8 +51,8 @@ const ScanScreen = ({ navigation }) => {
             <View
                 style={{
                     // Paddings to handle safe area
-                    paddingTop: insets.top,
-                    paddingBottom: insets.bottom,
+                    // paddingTop: insets.top,
+                    // paddingBottom: insets.bottom,
                 }}>
 
                 <Text>NO ACCESS TO CAMERA</Text>
@@ -67,30 +67,34 @@ const ScanScreen = ({ navigation }) => {
 
     return (
         <View
-            className='h-screen'
+            className='bg-[#F0F0F0] h-screen flex'
             style={{
                 // Paddings to handle safe area
                 // paddingTop: insets.top,
                 // paddingBottom: insets.bottom,
             }}>
 
+            <View className='p-4 bg-white'>
+                <BarCodeScanner
+                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                    className='h-full w-full flex-grow '
 
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                className='w-full h-full'
-            />
+                />
+            </View>
+
+
+            <View className='py-2 px-9 flex-grow'>
+                <Pressable className='rounded-lg bg-primary6 py-1'>
+                    <Text className='font-labelBold text-base text-center text-white'>Masukkan ID mesin</Text>
+                </Pressable>
+            </View>
+
+
             {/*             
             <View className='bg-primary6 items-center justify-center h-96 w-80 overflow-hidden rounded-3xl'>
             </View> */}
 
-            <View className='absolute bg-red-400 mx-auto bottom-14'>
-                <Text>ScanScreen</Text>
-                <Text className='text-xl m-5'>{text}</Text>
-                {scanned && navigation.navigate('Katalog') && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-            </View>
-
-
-            <StatusBar style="dark" />
+            <StatusBar style="auto" />
         </View>
 
     )

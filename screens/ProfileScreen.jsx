@@ -1,9 +1,28 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { Pressable } from 'react-native'
 import { Image, View, Button, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import axios from 'axios'
 
 const ProfileScreen = ({ navigation }) => {
+    // const [quote, setQuote] = useState('')
+    // const [people, setPeople] = useState('')
+    const [minyak, setMinyak] = useState([])
+
+    const hapus = () => {
+        setMinyak([])
+    }
+
+    async function getQuote() {
+        try {
+            const response = await axios.get('https://fadhli.pythonanywhere.com/minyak/');
+            console.log(response.data);
+            setMinyak(response.data)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: 'Profil',
@@ -23,7 +42,11 @@ const ProfileScreen = ({ navigation }) => {
                 fontFamily: 'labelBold',
             },
         });
+
+        getQuote()
     }, [])
+
+
     return (
         <View className='py-5 px-4'>
 
@@ -36,6 +59,7 @@ const ProfileScreen = ({ navigation }) => {
                     }}
                 />
                 <Text className='font-labelSemiBold text-primary6 text-xs'>Ubah foto profil</Text>
+
             </View>
 
             {/* INFORMASI */}
@@ -106,6 +130,22 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
 
             </View>
+
+
+            {/* TESTING API */}
+
+            {minyak.map((user) => (
+                <View key={user.id}>
+                    <Text >{user.user}</Text>
+                    <Text>{user.volume}</Text>
+                </View>
+
+            ))}
+
+            <Pressable className='mb-10 bg-primary6' onPress={getQuote}>
+                <Text>API</Text>
+            </Pressable>
+            <Button title='hapus' onPress={hapus} />
 
         </View>
     )

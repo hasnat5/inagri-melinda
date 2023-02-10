@@ -1,14 +1,15 @@
+import { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import * as SplashScreen from 'expo-splash-screen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
+import { NativeBaseProvider } from "native-base";
+import * as SplashScreen from 'expo-splash-screen';
 import Tabs from './navigation/tabs'
-import { useEffect } from 'react';
 import Login from './screens/Login';
 import Register from './screens/Register';
-import { NativeBaseProvider } from "native-base";
 import ProfileScreen from './screens/ProfileScreen';
+import ScanScreen from './screens/ScanScreen';
 
 
 export default function App() {
@@ -23,19 +24,19 @@ export default function App() {
     // visbyThin: require('./assets/font/visbycf-thin.otf'),
   });
 
-  // useEffect(() => {
-  //   async function prepare() {
-  //     await SplashScreen.preventAutoHideAsync();
-  //   }
-  //   prepare()
-  // }, [])
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+    prepare()
+  }, [])
 
   if (!fontsLoaded) {
     return null;
   }
-  // `else {
-  //   SplashScreen.hideAsync()
-  // }`
+  else {
+    SplashScreen.hideAsync()
+  }
 
   const Stack = createNativeStackNavigator();
 
