@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
 import { Pressable } from 'react-native'
-import { Image, View, Button, Text } from 'react-native'
+import { Image, View, Button, Text, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import axios from 'axios'
 
@@ -16,8 +16,8 @@ const ProfileScreen = ({ navigation }) => {
     async function getQuote() {
         try {
             const response = await axios.get('https://fadhli.pythonanywhere.com/minyak/');
-            console.log(response.data);
-            setMinyak(response.data)
+            console.log(response.data.results);
+            setMinyak(response.data.results)
         } catch (error) {
             console.error(error);
         }
@@ -134,13 +134,16 @@ const ProfileScreen = ({ navigation }) => {
 
             {/* TESTING API */}
 
-            {minyak.map((user) => (
-                <View key={user.id}>
-                    <Text >{user.user}</Text>
-                    <Text>{user.volume}</Text>
-                </View>
+            <ScrollView className='h-28'>
+                {minyak.map((user) => (
+                    <View key={user.id}>
+                        <Text >{user.user}</Text>
+                        <Text>{user.volume}</Text>
+                        <Text>{user.poin}</Text>
+                    </View>
 
-            ))}
+                ))}
+            </ScrollView>
 
             <Pressable className='mb-10 bg-primary6' onPress={getQuote}>
                 <Text>API</Text>

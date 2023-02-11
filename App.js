@@ -9,7 +9,6 @@ import Tabs from './navigation/tabs'
 import Login from './screens/Login';
 import Register from './screens/Register';
 import ProfileScreen from './screens/ProfileScreen';
-import ScanScreen from './screens/ScanScreen';
 
 
 export default function App() {
