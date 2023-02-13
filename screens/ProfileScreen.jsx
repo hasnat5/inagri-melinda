@@ -3,12 +3,12 @@ import { Pressable } from 'react-native'
 import { Image, View, Button, Text, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios'
 
 const ProfileScreen = ({ navigation }) => {
     // const [quote, setQuote] = useState('')
     // const [people, setPeople] = useState('')
     const { logout } = useContext(AuthContext)
+    const { userInfo } = useContext(AuthContext)
 
     const hapus = () => {
         setMinyak([])
@@ -72,7 +72,7 @@ const ProfileScreen = ({ navigation }) => {
                     <View className='flex-1 flex-row justify-between border-b-[1px] border-neutral5'>
                         <View>
                             <Text className='font-labelSemiBold text-sm mb-2'>Nomor Telepon</Text>
-                            <Text className='font-labelReguler text-xs mb-1.5'>089-969-444-04</Text>
+                            <Text className='font-labelReguler text-xs mb-1.5'>{userInfo.phone}</Text>
                         </View>
 
                         <Pressable className='self-center'>
@@ -88,7 +88,7 @@ const ProfileScreen = ({ navigation }) => {
                     <View className='flex-1 flex-row justify-between border-b-[1px] border-neutral5'>
                         <View>
                             <Text className='font-labelSemiBold text-sm mb-2'>Nama</Text>
-                            <Text className='font-labelReguler text-xs mb-1.5'>Hasnat Ferdiananda</Text>
+                            <Text className='font-labelReguler text-xs mb-1.5'>{userInfo.name}</Text>
                         </View>
 
                         <Pressable className='self-center'>
@@ -104,7 +104,7 @@ const ProfileScreen = ({ navigation }) => {
                     <View className='flex-1 flex-row justify-between border-b-[1px] border-neutral5'>
                         <View>
                             <Text className='font-labelSemiBold text-sm mb-2'>Email</Text>
-                            <Text className='font-labelReguler text-xs mb-1.5'>hasnatferdiananda@gmail.com</Text>
+                            <Text className='font-labelReguler text-xs mb-1.5'>{userInfo.email}</Text>
                         </View>
 
                         <Pressable className='self-center'>
@@ -120,7 +120,7 @@ const ProfileScreen = ({ navigation }) => {
                     <View className='flex-1 flex-row justify-between border-b-[1px] border-neutral5'>
                         <View>
                             <Text className='font-labelSemiBold text-sm mb-2'>Password</Text>
-                            <Text className='font-labelReguler text-xs mb-1.5'>1234</Text>
+                            <Text className='font-labelReguler text-xs mb-1.5'>terlarang</Text>
                         </View>
 
                         <Pressable className='self-center'>

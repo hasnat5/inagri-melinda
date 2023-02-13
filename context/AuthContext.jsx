@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     const login = (email, password) => {
         setIsLoading(true)
 
-        axios.post('https://fadhli.pythonanywhere.com/login/', {
+        axios.post(`${BASE_URL}login/`, {
             email,
             password
         })
@@ -25,10 +25,22 @@ export const AuthProvider = ({ children }) => {
                 AsyncStorage.setItem('userToken', res.data.jwt)
 
             })
-            .catch(function (error) {
+            .catch((error) => {
                 console.log(`login error ${error}`)
                 Alert.alert('email atau pass salah')
-            });
+            })
+
+        axios.get(`${BASE_URL}user/`)
+            .then(res => {
+                // handle success
+                console.log(res.data)
+                setUserInfo(res.data)
+                AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
+            })
+            .catch((error) => {
+                // handle error
+                console.log(error);
+            })
 
         setIsLoading(false)
     }
@@ -36,6 +48,8 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         setIsLoading(true)
         setUserToken(null)
+        setUserInfo(null)
+        AsyncStorage.removeItem('userInfo')
         AsyncStorage.removeItem('userToken')
         setIsLoading(false)
     }
@@ -44,7 +58,13 @@ export const AuthProvider = ({ children }) => {
         try {
             setIsLoading(true)
             let userToken = await AsyncStorage.getItem('userToken')
-            setUserToken(userToken)
+            let userInfo = await AsyncStorage.getItem('userInfo')
+            userInfo = JSON.parse(userInfo)
+
+            if (userInfo) {
+                setUserToken(userToken)
+                setUserInfo(userInfo)
+            }
             setIsLoading(false)
         } catch (error) {
             console.log(`isLogged in error ${error}`)
@@ -57,7 +77,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ login, logout, isLoading, userToken }}>
+        <AuthContext.Provider value={{ login, logout, isLoading, userToken, userInfo }}>
             {children}
         </AuthContext.Provider>
     )

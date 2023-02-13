@@ -1,49 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react'
-import { Alert, Button, FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { Alert, FlatList, Image, Pressable, ScrollView, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AuthContext } from '../context/AuthContext';
+import axios from 'axios'
+import { BASE_URL } from '../config';
 
-// DATA PRODUK
-const DATAPRODUK = [
-    {
-        gambar: require('../assets/product/beras.png'),
-        jenis: 'Sembako',
-        nama: 'Beras 1kg',
-        poin: 100,
-        ditukar: 27,
-
-    },
-    {
-        gambar: require('../assets/product/minyak.png'),
-        jenis: 'Sembako',
-        nama: 'Minyak Goreng 1L',
-        poin: 75,
-        ditukar: 19,
-    },
-    {
-        gambar: require('../assets/product/gula.png'),
-        jenis: 'Sembako',
-        nama: 'Gula Pasir 500gr',
-        poin: 50,
-        ditukar: 18,
-    },
-    {
-        gambar: require('../assets/product/kopi.png'),
-        jenis: 'Sembako',
-        nama: 'Kopi Bubuk 250gr',
-        poin: 55,
-        ditukar: 17,
-    },
-    {
-        gambar: require('../assets/product/mie.png'),
-        jenis: 'Sembako',
-        nama: 'Mie Goreng 5pcs',
-        poin: 40,
-        ditukar: 14,
-    },
-
-
-];
 
 // DATA ARTIKEL
 const DATAARTIKEL = [
@@ -78,20 +40,20 @@ const DATABANNER = [
 ]
 
 // KOMPONEN KARTU
-const ProdukCard = ({ gambar, jenis, nama, poin, ditukar }) => {
+const ProdukCard = ({ gambar, kategori, nama, harga, penukar, keterangan, stok }) => {
     return (
-        <View className='overflow-hidden'>
-            <Image className='w-[100px] h-[100px] rounded-lg' source={gambar} />
+        <View className='overflow-hidden w-[120px]'>
+            <Image className='w-[120px] h-[120px] rounded-lg' source={{ uri: `https://fourtour.site/melinda${gambar}` }} />
 
             <View className='mt-2'>
                 <View className='mb-2'>
-                    <Text className="font-labelReguler text-[8px] text-primary6 mb-0.5">{jenis}</Text>
+                    <Text className="font-labelReguler text-[8px] text-primary6 mb-0.5">{kategori}</Text>
                     <Text className="font-labelReguler text-[10px] text-[#979797] mb-0.5">{nama}</Text>
-                    <Text className="font-labelSemiBold text-[10px] text-[#1F1F1F]">{poin} poin</Text>
+                    <Text className="font-labelSemiBold text-[10px] text-[#1F1F1F]">{harga} poin</Text>
                 </View>
 
                 <View className='flex-row flex-wrap mb-2'>
-                    <Text className="py-[2px] px-1 rounded bg-primary2 text-primary6 font-labelReguler text-[8px]">Ditukar {ditukar} kali</Text>
+                    <Text className="py-[2px] px-1 rounded bg-primary2 text-primary6 font-labelReguler text-[8px]">{stok} stok</Text>
                 </View>
 
                 <Pressable
@@ -120,6 +82,27 @@ const ArticleCard = ({ gambar, tanggal, judul }) => (
 const HomeScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
+    const [product, setProduct] = useState([])
+
+    const { userInfo } = useContext(AuthContext)
+
+    async function getProduk() {
+        try {
+            const response = await axios.get(`https://fourtour.site/melinda/produk/0`);
+            console.log(response.data.results);
+            setProduct(response.data.results)
+        } catch (error) {
+            console.error(error.response);
+        }
+    }
+
+    useEffect(() => {
+        getProduk()
+
+    }, [])
+
+
+
     const FlatListItemSeparator = () => {
         return (
             <View
@@ -135,6 +118,7 @@ const HomeScreen = ({ navigation }) => {
             />
         )
     }
+
 
 
     return (
@@ -161,8 +145,8 @@ const HomeScreen = ({ navigation }) => {
                         />
 
                         <View>
-                            <Text className="font-labelSemiBold text-xs text-white">Selamat Datang, Hasnat</Text>
-                            <Text className="font-labelReguler text-[8px] text-white" style={{ lineHeight: 12 }}>085321667443</Text>
+                            <Text className="font-labelSemiBold text-xs text-white">Selamat Datang, {userInfo.name}</Text>
+                            <Text className="font-labelReguler text-[8px] text-white" style={{ lineHeight: 12 }}>{userInfo.phone}</Text>
                         </View>
                     </Pressable>
 
@@ -242,12 +226,12 @@ const HomeScreen = ({ navigation }) => {
 
                         <FlatList
                             horizontal
-                            data={DATAPRODUK}
+                            data={product}
                             contentContainerStyle={{ paddingRight: 16, paddingLeft: 16 }}
                             ItemSeparatorComponent={FlatListItemSeparator}
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false}
-                            renderItem={({ item }) => <ProdukCard gambar={item.gambar} jenis={item.jenis} nama={item.nama} poin={item.poin} ditukar={item.ditukar} />}
+                            renderItem={({ item }) => <ProdukCard gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukar={item.penukar} stok={item.stok} />}
                         />
                     </View>
 

@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, Text, TextInput, View } from 'react-native'
+import { TouchableOpacity, Text, TextInput, View } from 'react-native'
 import Checkbox from 'expo-checkbox';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthContext } from '../context/AuthContext';
@@ -11,8 +11,10 @@ const Login = ({ navigation }) => {
 
     const [isChecked, setChecked] = useState(false);
     const [show, setShow] = React.useState(false);
-    const [email, setEmail] = useState('natttt@gmail.com')
-    const [password, setPassword] = useState('qwer')
+    const [email, setEmail] = useState(null)
+    const [password, setPassword] = useState(null)
+
+
     const { login } = useContext(AuthContext)
 
 
@@ -73,9 +75,9 @@ const Login = ({ navigation }) => {
                     </View>
                 </View>
 
-                <Pressable className='mb-3 bg-primary6 py-2 rounded-lg w-full' onPress={() => login(email, password)}>
+                <TouchableOpacity className='mb-3 bg-primary6 py-2 rounded-lg w-full' onPress={() => login(email, password)}>
                     <Text className='text-center font-labelSemiBold text-xs text-primary1'>Masuk</Text>
-                </Pressable>
+                </TouchableOpacity>
 
                 <Text className='font-labelReguler text-[10px] text-center'>
                     Belum punya akun?
