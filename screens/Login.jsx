@@ -1,20 +1,27 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState, useContext } from 'react'
+import { StatusBar } from 'expo-status-bar';
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Checkbox from 'expo-checkbox';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { AuthContext } from '../context/AuthContext';
+import { useEffect } from 'react';
 
 const Login = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
-    useLayoutEffect(() => {
+    const [isChecked, setChecked] = useState(false);
+    const [show, setShow] = React.useState(false);
+    const [email, setEmail] = useState('natttt@gmail.com')
+    const [password, setPassword] = useState('qwer')
+    const { login } = useContext(AuthContext)
+
+
+    useEffect(() => {
         navigation.setOptions({
             headerShown: false,
         });
-    }, [])
 
-    const [isChecked, setChecked] = useState(false);
-    const [show, setShow] = React.useState(false);
+    }, [])
 
     return (
         <View
@@ -32,12 +39,12 @@ const Login = ({ navigation }) => {
 
                 {/* EMAIL INPUT */}
                 <View className='w-full mb-4'>
-                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="user@gmail.com" />
+                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="user@gmail.com" value={email} onChangeText={(text) => setEmail(text)} />
                 </View>
 
                 {/* PASSWORD INPUT */}
                 <View className='w-full mb-5'>
-                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="Password" secureTextEntry={true} />
+                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="Password" secureTextEntry={true} value={password} onChangeText={(text) => setPassword(text)} />
 
                     {/* <Input w={{
                         base: "75%",
@@ -66,7 +73,7 @@ const Login = ({ navigation }) => {
                     </View>
                 </View>
 
-                <Pressable className='mb-3 bg-primary6 py-2 rounded-lg w-full' onPress={() => navigation.navigate('Beranda')}>
+                <Pressable className='mb-3 bg-primary6 py-2 rounded-lg w-full' onPress={() => login(email, password)}>
                     <Text className='text-center font-labelSemiBold text-xs text-primary1'>Masuk</Text>
                 </Pressable>
 
@@ -77,6 +84,8 @@ const Login = ({ navigation }) => {
                 </Text>
 
             </View>
+
+            <StatusBar style="auto" />
         </View >
 
     )

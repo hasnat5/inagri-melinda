@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 const Register = ({ navigation }) => {
     const insets = useSafeAreaInsets();
@@ -73,6 +74,8 @@ const Register = ({ navigation }) => {
                 </Text>
 
             </View>
+
+            <StatusBar style="auto" />
         </View >
     )
 }

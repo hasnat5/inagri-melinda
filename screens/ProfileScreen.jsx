@@ -1,34 +1,35 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState, useContext } from 'react'
 import { Pressable } from 'react-native'
 import { Image, View, Button, Text, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios'
 
 const ProfileScreen = ({ navigation }) => {
     // const [quote, setQuote] = useState('')
     // const [people, setPeople] = useState('')
-    const [minyak, setMinyak] = useState([])
+    const { logout } = useContext(AuthContext)
 
     const hapus = () => {
         setMinyak([])
     }
 
-    async function getQuote() {
-        try {
-            const response = await axios.get('https://fadhli.pythonanywhere.com/minyak/');
-            console.log(response.data.results);
-            setMinyak(response.data.results)
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    // async function getQuote() {
+    //     try {
+    //         const response = await axios.get('https://fadhli.pythonanywhere.com/minyak/');
+    //         console.log(response.data.results);
+    //         setMinyak(response.data.results)
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
 
     useLayoutEffect(() => {
         navigation.setOptions({
             title: 'Profil',
             headerRight: () => (
                 <Pressable
-                    onPress={() => navigation.navigate('Login')}
+                    onPress={() => { logout() }}
                     title="Info"
                     color="#000"
                 >
@@ -43,7 +44,6 @@ const ProfileScreen = ({ navigation }) => {
             },
         });
 
-        getQuote()
     }, [])
 
 
@@ -130,25 +130,6 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
 
             </View>
-
-
-            {/* TESTING API */}
-
-            <ScrollView className='h-28'>
-                {minyak.map((user) => (
-                    <View key={user.id}>
-                        <Text >{user.user}</Text>
-                        <Text>{user.volume}</Text>
-                        <Text>{user.poin}</Text>
-                    </View>
-
-                ))}
-            </ScrollView>
-
-            <Pressable className='mb-10 bg-primary6' onPress={getQuote}>
-                <Text>API</Text>
-            </Pressable>
-            <Button title='hapus' onPress={hapus} />
 
         </View>
     )

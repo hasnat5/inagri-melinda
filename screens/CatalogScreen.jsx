@@ -15,7 +15,6 @@ const CatalogScreen = ({ navigation }) => {
 
     const [isModalVisible, setModalVisible] = useState(false);
     const [product, setProduct] = useState([]);
-    const [filterData, setFilterData] = useState('');
     const [search, setSearch] = useState('');
     const [message, setMessage] = useState('');
     const [price, setPrice] = useState('');
@@ -24,11 +23,10 @@ const CatalogScreen = ({ navigation }) => {
     // FETCH API
     async function getProduk() {
         try {
-            const response = await axios.get('https://fourtour.site/melinda/produk/0');
-            // console.log(response.data.data);
-            setMessage(response.data.pesan);
-            setProduct(response.data.data)
-            setFilterData(response.data.data)
+            const response = await axios.get(`https://fourtour.site/melinda/produk/0?search=(${search})`);
+            console.log(response.data.results);
+            setMessage(response.data.count);
+            setProduct(response.data.results)
         } catch (error) {
             console.error(error);
         }
@@ -36,6 +34,7 @@ const CatalogScreen = ({ navigation }) => {
 
     useEffect(() => {
         getProduk()
+        console.log(search)
     }, [])
 
     const toggleModal = () => {
@@ -43,19 +42,9 @@ const CatalogScreen = ({ navigation }) => {
     };
 
     const searchFilter = (text) => {
-        if (text) {
-            const newData = product.filter((item) => {
-                const itemData = item.nama ? item.nama : '';
-                const texData = text
-                return itemData.indexOf(texData) > -1
-            })
-
-            setFilterData(newData)
-            setSearch(text)
-        } else {
-            setFilterData(product)
-            setSearch(text)
-        }
+        setSearch(text)
+        console.log(text)
+        getProduk()
     }
 
     const FlatListItemSeparator = () => {
@@ -66,11 +55,11 @@ const CatalogScreen = ({ navigation }) => {
         )
     }
 
-    const ProductCard = ({ gambar, kategori, nama, harga, penukaran, keterangan, stok }) => (
+    const ProductCard = ({ gambar, kategori, nama, harga, penukar, keterangan, stok }) => (
         <View style={[{ flex: 1 }, product % 2 == 0 ? { marginRight: 16 } : { marginLeft: 16 }]} className="shadow-sm bg-white rounded-lg h-auto w-full overflow-hidden">
             <Image
                 className="self-center h-44 w-44 max-w-full max-h-full"
-                source={require('../assets/product/beras.png')}
+                source={{ uri: `https://fourtour.site/melinda${gambar}` }}
             />
             <View className='p-2 mt-2'>
                 <View className='mb-2'>
@@ -80,7 +69,7 @@ const CatalogScreen = ({ navigation }) => {
                 </View>
 
                 <View className='flex-row flex-wrap'>
-                    <Text className="py-[2px] px-1 rounded bg-primary2 text-primary6 font-labelSemiBold text-[8px]">Ditukar {penukaran} kali</Text>
+                    <Text className="py-[2px] px-1 rounded bg-primary2 text-primary6 font-labelSemiBold text-[8px]">Stok {stok}</Text>
                 </View>
 
                 <Pressable
@@ -195,18 +184,18 @@ const CatalogScreen = ({ navigation }) => {
                     />
                 </ View >
 
-                <Text className='text-xs font-labelReguler'>{message}</Text>
+                <Text className='text-xs font-labelReguler'>Menampilkan {message} produk</Text>
 
             </View >
 
             <FlatList
                 showsVerticalScrollIndicator={false}
                 // className='flex-grow'
-                data={filterData}
+                data={product}
                 numColumns={2}
                 ItemSeparatorComponent={FlatListItemSeparator}
                 contentContainerStyle={{ paddingRight: 16, paddingTop: 10, paddingBottom: 16 }}
-                renderItem={({ item }) => <ProductCard gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukaran={item.penukaran} stok={item.stok} />}
+                renderItem={({ item }) => <ProductCard gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukar={item.penukar} stok={item.stok} />}
                 keyExtractor={item => item.nama}
             />
 

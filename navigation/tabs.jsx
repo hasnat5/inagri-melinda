@@ -111,6 +111,7 @@ const Tabs = ({ navigation }) => {
 
             <Tab.Screen name="Katalog" component={CatalogScreen}
                 options={{
+                    tabBarHideOnKeyboard: true,
                     tabBarIcon: ({ focused }) => (
                         <View className='items-center justify-center'>
                             <Image

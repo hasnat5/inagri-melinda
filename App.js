@@ -1,14 +1,10 @@
 import { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import { NativeBaseProvider } from "native-base";
 import * as SplashScreen from 'expo-splash-screen';
-import Tabs from './navigation/tabs'
-import Login from './screens/Login';
-import Register from './screens/Register';
-import ProfileScreen from './screens/ProfileScreen';
+import { AuthProvider } from './context/AuthContext';
+import AppNav from './navigation/AppNav';
 
 
 export default function App() {
@@ -37,19 +33,14 @@ export default function App() {
     SplashScreen.hideAsync()
   }
 
-  const Stack = createNativeStackNavigator();
+
 
   return (
     <NativeBaseProvider>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="Tabs">
-            <Stack.Screen name="Tabs" component={Tabs} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="Register" component={Register} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <AuthProvider>
+          <AppNav />
+        </AuthProvider>
       </SafeAreaProvider>
     </NativeBaseProvider>
 
