@@ -7,7 +7,7 @@ import AppStack from './AppStack';
 import AuthStack from './AuthStack';
 
 const AppNav = () => {
-    const { isLoading, userToken } = useContext(AuthContext);
+    const { isLoading, userInfo } = useContext(AuthContext);
 
     if (isLoading) {
         return (
@@ -19,7 +19,7 @@ const AppNav = () => {
 
     return (
         <NavigationContainer>
-            {userToken !== null ? <AppStack /> : <AuthStack />}
+            {userInfo !== null ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
     )
 

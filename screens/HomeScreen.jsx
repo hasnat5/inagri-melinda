@@ -79,10 +79,12 @@ const ArticleCard = ({ gambar, tanggal, judul }) => (
 )
 
 
+
 const HomeScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
     const [product, setProduct] = useState([])
+    const [poin, setPoin] = useState([])
 
     const { userInfo } = useContext(AuthContext)
 
@@ -96,9 +98,23 @@ const HomeScreen = ({ navigation }) => {
         }
     }
 
+    async function getPoin() {
+        try {
+            const response = await axios.get(`${BASE_URL}poin/`);
+            console.log(response.data)
+            setPoin(response.data)
+            // AsyncStorage.setItem('userPoin', JSON.stringify(userPoin))
+
+        } catch (error) {
+            // getPoin()
+            Alert.alert('poin tidak terambil')
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
         getProduk()
-
+        getPoin()
     }, [])
 
 
@@ -191,7 +207,7 @@ const HomeScreen = ({ navigation }) => {
                                 <Text className='font-labelMedium text-xs text-primary6'>Reward Mijan</Text>
                             </View>
 
-                            <Text className='font-labelMedium text-sm'>100.000 Poin</Text>
+                            <Text className='font-labelMedium text-sm'>{poin.poin} Poin</Text>
                         </View>
 
                         {/* kontribusi mijan */}
@@ -201,7 +217,7 @@ const HomeScreen = ({ navigation }) => {
                                 <Text className='font-labelMedium text-xs text-primary6'>Kontribusi Mijan</Text>
                             </View>
 
-                            <Text className='font-labelMedium text-sm'>20 Liter</Text>
+                            <Text className='font-labelMedium text-sm'>{poin.volume} Liter</Text>
                         </View>
                     </View>
 

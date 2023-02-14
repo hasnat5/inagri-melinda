@@ -8,11 +8,8 @@ const ProfileScreen = ({ navigation }) => {
     // const [quote, setQuote] = useState('')
     // const [people, setPeople] = useState('')
     const { logout } = useContext(AuthContext)
-    const { userInfo } = useContext(AuthContext)
+    const { userInfo, userToken } = useContext(AuthContext)
 
-    const hapus = () => {
-        setMinyak([])
-    }
 
     // async function getQuote() {
     //     try {
@@ -120,7 +117,7 @@ const ProfileScreen = ({ navigation }) => {
                     <View className='flex-1 flex-row justify-between border-b-[1px] border-neutral5'>
                         <View>
                             <Text className='font-labelSemiBold text-sm mb-2'>Password</Text>
-                            <Text className='font-labelReguler text-xs mb-1.5'>terlarang</Text>
+                            <Text className='font-labelReguler text-xs mb-1.5'>{userToken}</Text>
                         </View>
 
                         <Pressable className='self-center'>
