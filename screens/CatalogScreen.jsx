@@ -46,7 +46,7 @@ const CatalogScreen = ({ navigation }) => {
                 jumlah: 1
             })
             console.log(response.data)
-            Alert.alert('Penukaran berhasil', `${response.data}`)
+            Alert.alert('Penukaran berhasil')
             navigation.navigate('Beranda')
         }
         catch (error) {
@@ -82,7 +82,7 @@ const CatalogScreen = ({ navigation }) => {
         <View style={[{ flex: 1 }, product % 2 == 0 ? { marginRight: 16 } : { marginLeft: 16 }]} className="shadow-sm bg-white rounded-lg h-auto w-full overflow-hidden">
             <Image
                 className="self-center h-44 w-44 max-w-full max-h-full"
-                source={{ uri: `https://fourtour.site/melinda${gambar}` }}
+                source={{ uri: `${BASE_URL}${gambar}` }}
             />
             <View className='p-2 mt-2'>
                 <View className='mb-2'>
@@ -134,8 +134,6 @@ const CatalogScreen = ({ navigation }) => {
                     <Text className='font-labelSemiBold text-xs mb-2'>Apakah kamu yakin menukarkan</Text>
                     <Text className='font-labelBold text-4xl text-primary6 mb-2'>{price} Poin</Text>
                     <Text className='font-labelSemiBold text-xs'>Untuk {name}?</Text>
-                    <Text className='font-labelSemiBold text-xs'>Untuk {userInfo._id}?</Text>
-                    <Text className='font-labelSemiBold text-xs'>Untuk {idProduk}?</Text>
 
                     <View className='flex-row mt-6'>
                         <Pressable className='bg-primary6 py-2 rounded mr-2 flex-1' onPress={toggleModal}>
@@ -146,9 +144,6 @@ const CatalogScreen = ({ navigation }) => {
                             onPress={() => {
                                 toggleModal()
                                 tukarPoin()
-                                // Alert.alert('Penukaran Berhasil', `${price} Poin untuk ${name}`, [
-                                //     { text: 'Kembali ke beranda', onPress: () => navigation.navigate('Beranda') },
-                                // ])
                             }} >
                             <Text className='font-labelReguler text-primary6 text-[10px] text-center' style={{ lineHeight: 12 }}>Ya</Text>
                         </Pressable>
