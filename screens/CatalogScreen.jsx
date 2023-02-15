@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Alert, FlatList, Image, Pressable, Text, TextInput, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import SelectDropdown from 'react-native-select-dropdown'
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios'
+import { AuthContext } from '../context/AuthContext';
+import { BASE_URL } from '../config'
 import Modal from "react-native-modal";
 
 const countries = ["Egypt", "Canada", "Australia", "Ireland"]
@@ -13,22 +15,43 @@ const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 const CatalogScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
+    const { userInfo } = useContext(AuthContext)
+
     const [isModalVisible, setModalVisible] = useState(false);
     const [product, setProduct] = useState([]);
     const [search, setSearch] = useState('');
     const [message, setMessage] = useState('');
     const [price, setPrice] = useState('');
     const [name, setName] = useState('');
+    const [idProduk, setIdProduk] = useState('');
 
     // FETCH API
     async function getProduk() {
         try {
-            const response = await axios.get(`https://fourtour.site/melinda/produk/0?search=(${search})`);
+            const response = await axios.get(`${BASE_URL}produk/0?search=(${search})`);
             console.log(response.data.results);
             setMessage(response.data.count);
             setProduct(response.data.results)
         } catch (error) {
             console.error(error);
+        }
+    }
+
+    // TUKAR API
+    async function tukarPoin() {
+        try {
+            const response = await axios.post(`${BASE_URL}produk/penukaran`, {
+                id_pengguna: userInfo._id,
+                id_produk: idProduk,
+                jumlah: 1
+            })
+            console.log(response.data)
+            Alert.alert('Penukaran berhasil', `${response.data}`)
+            navigation.navigate('Beranda')
+        }
+        catch (error) {
+            console.log(`Penukaran gagal ${error.response}`)
+            Alert.alert('Penukaran gagal')
         }
     }
 
@@ -55,7 +78,7 @@ const CatalogScreen = ({ navigation }) => {
         )
     }
 
-    const ProductCard = ({ gambar, kategori, nama, harga, penukar, keterangan, stok }) => (
+    const ProductCard = ({ gambar, kategori, nama, harga, penukar, keterangan, stok, idProduk }) => (
         <View style={[{ flex: 1 }, product % 2 == 0 ? { marginRight: 16 } : { marginLeft: 16 }]} className="shadow-sm bg-white rounded-lg h-auto w-full overflow-hidden">
             <Image
                 className="self-center h-44 w-44 max-w-full max-h-full"
@@ -78,6 +101,7 @@ const CatalogScreen = ({ navigation }) => {
                         toggleModal()
                         setPrice(harga)
                         setName(nama)
+                        setIdProduk(idProduk)
                     }}
 
                 >
@@ -110,6 +134,8 @@ const CatalogScreen = ({ navigation }) => {
                     <Text className='font-labelSemiBold text-xs mb-2'>Apakah kamu yakin menukarkan</Text>
                     <Text className='font-labelBold text-4xl text-primary6 mb-2'>{price} Poin</Text>
                     <Text className='font-labelSemiBold text-xs'>Untuk {name}?</Text>
+                    <Text className='font-labelSemiBold text-xs'>Untuk {userInfo._id}?</Text>
+                    <Text className='font-labelSemiBold text-xs'>Untuk {idProduk}?</Text>
 
                     <View className='flex-row mt-6'>
                         <Pressable className='bg-primary6 py-2 rounded mr-2 flex-1' onPress={toggleModal}>
@@ -119,9 +145,10 @@ const CatalogScreen = ({ navigation }) => {
                         <Pressable className='py-2 rounded flex-1 border border-primary6'
                             onPress={() => {
                                 toggleModal()
-                                Alert.alert('Penukaran Berhasil', `${price} Poin untuk ${name}`, [
-                                    { text: 'Kembali ke beranda', onPress: () => navigation.navigate('Beranda') },
-                                ])
+                                tukarPoin()
+                                // Alert.alert('Penukaran Berhasil', `${price} Poin untuk ${name}`, [
+                                //     { text: 'Kembali ke beranda', onPress: () => navigation.navigate('Beranda') },
+                                // ])
                             }} >
                             <Text className='font-labelReguler text-primary6 text-[10px] text-center' style={{ lineHeight: 12 }}>Ya</Text>
                         </Pressable>
@@ -195,7 +222,7 @@ const CatalogScreen = ({ navigation }) => {
                 numColumns={2}
                 ItemSeparatorComponent={FlatListItemSeparator}
                 contentContainerStyle={{ paddingRight: 16, paddingTop: 10, paddingBottom: 16 }}
-                renderItem={({ item }) => <ProductCard gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukar={item.penukar} stok={item.stok} />}
+                renderItem={({ item }) => <ProductCard idProduk={item._id} gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukar={item.penukar} stok={item.stok} />}
                 keyExtractor={item => item.nama}
             />
 

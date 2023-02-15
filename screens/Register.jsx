@@ -1,10 +1,35 @@
-import React, { useLayoutEffect } from 'react'
-import { Pressable, Text, TextInput, View } from 'react-native';
+import React, { useLayoutEffect, useState } from 'react'
+import { Alert, Pressable, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import axios from 'axios'
+import { BASE_URL } from '../config'
 
 const Register = ({ navigation }) => {
     const insets = useSafeAreaInsets();
+
+    const [name, setName] = useState(null)
+    const [phone, setPhone] = useState(null)
+    const [email, setEmail] = useState(null)
+    const [password, setPassword] = useState(null)
+
+    async function register() {
+        try {
+            const response = await axios.post(`${BASE_URL}register/`, {
+                name,
+                phone,
+                email,
+                password
+            })
+            console.log(response.data)
+            Alert.alert('daftar berhasil')
+            navigation.navigate('Login')
+        }
+        catch (error) {
+            console.log(`daftar gagal ${error}`)
+            Alert.alert('daftar gagal')
+        }
+    }
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -28,22 +53,22 @@ const Register = ({ navigation }) => {
 
                 {/* NAMA INPUT */}
                 <View className='w-full mb-4'>
-                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="Nama" />
+                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="Nama" value={name} onChangeText={(text) => setName(text)} />
                 </View>
 
                 {/* NOMOR INPUT */}
                 <View className='w-full mb-4'>
-                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="0812-3456-7891" />
+                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="0812-3456-7891" value={phone} onChangeText={(text) => setPhone(text)} />
                 </View>
 
                 {/* EMAIL INPUT */}
                 <View className='w-full mb-4'>
-                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="user@gmail.com" />
+                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="user@gmail.com" value={email} onChangeText={(text) => setEmail(text)} />
                 </View>
 
                 {/* PASSWORD INPUT */}
                 <View className='w-full mb-5'>
-                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="Password" secureTextEntry={true} />
+                    <TextInput className='w-full bg-white p-2 rounded-xl border border-[#D2D2D2] font-labelBold text-[10px]' placeholder="Password" secureTextEntry={true} value={password} onChangeText={(text) => setPassword(text)} />
 
                     {/* <Input w={{
                         base: "75%",
@@ -61,7 +86,7 @@ const Register = ({ navigation }) => {
                     ?
                 </Text>
 
-                <Pressable className='mb-3 bg-primary6 py-2 rounded-lg w-full' onPress={() => navigation.navigate('Login')}>
+                <Pressable className='mb-3 bg-primary6 py-2 rounded-lg w-full' onPress={register}>
                     <Text className='text-center font-labelSemiBold text-xs text-primary1'>Daftar</Text>
                 </Pressable>
 

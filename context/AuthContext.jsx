@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-import React, { createContext, useEffect } from 'react'
-import { useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { Alert } from 'react-native'
 import { BASE_URL } from '../config'
 
@@ -11,7 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [userToken, setUserToken] = useState(null)
     const [userInfo, setUserInfo] = useState(null)
-    const [userPoin, setUserPoin] = useState(null)
 
     // const [userData, setUserData] = useState({
     //     userToken: null,
@@ -54,27 +52,9 @@ export const AuthProvider = ({ children }) => {
             }
         }
 
-        async function getPoin() {
-            try {
-                const response = await axios.get(`${BASE_URL}poin/`);
-                console.log(response.data)
-                setUserPoin(response.data)
-                AsyncStorage.setItem('userPoin', JSON.stringify(userPoin))
-
-            } catch (error) {
-                // getPoin()
-                Alert.alert('poin tidak terambil')
-                console.error(error);
-            }
-        }
 
         getToken()
         getInfo()
-        // getPoin()
-        // if (userToken !== null) {
-        //     getInfo()
-        //     getPoin()
-        // }
 
         setIsLoading(false)
 
@@ -86,7 +66,6 @@ export const AuthProvider = ({ children }) => {
         setUserInfo(null)
         AsyncStorage.removeItem('userInfo')
         AsyncStorage.removeItem('userToken')
-        AsyncStorage.removeItem('userPoin')
 
         axios.post(`${BASE_URL}logout/`, {
 
@@ -109,14 +88,14 @@ export const AuthProvider = ({ children }) => {
             setIsLoading(true)
             let userToken = await AsyncStorage.getItem('userToken')
             let userInfo = await AsyncStorage.getItem('userInfo')
-            // let userPoin = await AsyncStorage.getItem('userPoin')
-            userInfo = JSON.parse(userInfo)
-            // userPoin = JSON.parse(userPoin)
 
-            if (userToken) {
+            userInfo = JSON.parse(userInfo)
+
+
+            if (userInfo) {
                 setUserToken(userToken)
                 setUserInfo(userInfo)
-                // setUserPoin(userPoin)
+
             }
             setIsLoading(false)
         } catch (error) {
@@ -134,7 +113,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ login, logout, isLoading, userToken, userInfo, userPoin }}>
+        <AuthContext.Provider value={{ login, logout, isLoading, userToken, userInfo }}>
             {children}
         </AuthContext.Provider>
     )
