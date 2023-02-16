@@ -46,7 +46,7 @@ const CatalogScreen = ({ navigation }) => {
                 jumlah: 1
             })
             console.log(response.data)
-            Alert.alert('Penukaran berhasil')
+            Alert.alert(`${response.data.message}`)
             navigation.navigate('Beranda')
         }
         catch (error) {

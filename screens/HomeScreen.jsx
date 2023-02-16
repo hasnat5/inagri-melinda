@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios'
 import { BASE_URL } from '../config';
+import Modal from "react-native-modal";
 
 
 // DATA ARTIKEL
@@ -39,34 +40,6 @@ const DATABANNER = [
     },
 ]
 
-// KOMPONEN KARTU
-const ProdukCard = ({ gambar, kategori, nama, harga, penukar, keterangan, stok }) => {
-    return (
-        <View className='overflow-hidden w-[120px]'>
-            <Image className='w-[120px] h-[120px] rounded-lg' source={{ uri: `https://fourtour.site/melinda${gambar}` }} />
-
-            <View className='mt-2'>
-                <View className='mb-2'>
-                    <Text className="font-labelReguler text-[8px] text-primary6 mb-0.5">{kategori}</Text>
-                    <Text className="font-labelReguler text-[10px] text-[#979797] mb-0.5">{nama}</Text>
-                    <Text className="font-labelSemiBold text-[10px] text-[#1F1F1F]">{harga} poin</Text>
-                </View>
-
-                <View className='flex-row flex-wrap mb-2'>
-                    <Text className="py-[2px] px-1 rounded bg-primary2 text-primary6 font-labelReguler text-[8px]">{stok} stok</Text>
-                </View>
-
-                <Pressable
-                    className="bg-primary6 py-2 rounded items-center justify-center"
-                    onPress={() => Alert.alert('Simple Button pressed')}
-                >
-                    <Text className="font-labelSemiBold text-[10px] text-white">Tukar Poin</Text>
-                </Pressable>
-            </View >
-        </View>
-    )
-}
-
 // KOMPONEN ARTIKEL
 const ArticleCard = ({ gambar, tanggal, judul }) => (
     <View className='mb-4'>
@@ -83,15 +56,19 @@ const ArticleCard = ({ gambar, tanggal, judul }) => (
 const HomeScreen = ({ navigation }) => {
     const insets = useSafeAreaInsets();
 
+    const [isModalVisible, setModalVisible] = useState(false);
     const [product, setProduct] = useState([])
     const [poin, setPoin] = useState([])
+    const [idProduk, setIdProduk] = useState('');
+    const [price, setPrice] = useState('');
+    const [name, setName] = useState('');
 
-    const { userInfo } = useContext(AuthContext)
+    const { userInfo, userToken } = useContext(AuthContext)
 
     async function getProduk() {
         try {
-            const response = await axios.get(`https://fourtour.site/melinda/produk/0`);
-            console.log(response.data.results);
+            const response = await axios.get(`${BASE_URL}produk/0`);
+            console.log(response.data.results)
             setProduct(response.data.results)
         } catch (error) {
             console.error(error.response);
@@ -100,7 +77,9 @@ const HomeScreen = ({ navigation }) => {
 
     async function getPoin() {
         try {
-            const response = await axios.get(`${BASE_URL}poin/`);
+            const response = await axios.post(`${BASE_URL}poin/`, {
+                jwt: userToken
+            });
             console.log(response.data)
             setPoin(response.data)
             // AsyncStorage.setItem('userPoin', JSON.stringify(userPoin))
@@ -109,6 +88,29 @@ const HomeScreen = ({ navigation }) => {
             // getPoin()
             Alert.alert('poin tidak terambil')
             console.error(error);
+        }
+    }
+
+
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
+    // TUKAR API
+    async function tukarPoin() {
+        try {
+            const response = await axios.post(`${BASE_URL}produk/penukaran`, {
+                id_pengguna: userInfo._id,
+                id_produk: idProduk,
+                jumlah: 1
+            })
+            console.log(response.data)
+            Alert.alert('Penukaran berhasil')
+            navigation.navigate('Beranda')
+        }
+        catch (error) {
+            console.log(`Penukaran gagal ${error.response}`)
+            Alert.alert('Penukaran gagal')
         }
     }
 
@@ -136,6 +138,38 @@ const HomeScreen = ({ navigation }) => {
     }
 
 
+    // KOMPONEN KARTU
+    const ProdukCard = ({ gambar, kategori, nama, harga, penukar, keterangan, stok, idProduk }) => {
+        return (
+            <View className='overflow-hidden w-[120px]'>
+                <Image className='w-[120px] h-[120px] rounded-lg' source={{ uri: `${BASE_URL}${gambar}` }} />
+
+                <View className='mt-2'>
+                    <View className='mb-2'>
+                        <Text className="font-labelReguler text-[8px] text-primary6 mb-0.5">{kategori}</Text>
+                        <Text className="font-labelReguler text-[10px] text-[#979797] mb-0.5">{nama}</Text>
+                        <Text className="font-labelSemiBold text-[10px] text-[#1F1F1F]">{harga} poin</Text>
+                    </View>
+
+                    <View className='flex-row flex-wrap mb-2'>
+                        <Text className="py-[2px] px-1 rounded bg-primary2 text-primary6 font-labelReguler text-[8px]">{stok} stok</Text>
+                    </View>
+
+                    <Pressable
+                        className="bg-primary6 py-2 rounded items-center justify-center"
+                        onPress={() => {
+                            toggleModal()
+                            setPrice(harga)
+                            setName(nama)
+                            setIdProduk(idProduk)
+                        }}
+                    >
+                        <Text className="font-labelSemiBold text-[10px] text-white">Tukar Poin</Text>
+                    </Pressable>
+                </View >
+            </View>
+        )
+    }
 
     return (
         <View
@@ -146,6 +180,34 @@ const HomeScreen = ({ navigation }) => {
             }}
             className='bg-primary6 flex justify-between h-screen'
         >
+
+            {/* MODAL */}
+            <Modal
+                isVisible={isModalVisible}
+                className='absolute items-center right-0 left-0 top-1/3'
+                onBackdropPress={() => setModalVisible(false)}>
+                <View style={{ flex: 1 }} className='bg-white w-[253px] rounded-lg justify-center items-center p-6'>
+
+                    <Text className='font-labelSemiBold text-xs mb-2'>Apakah kamu yakin menukarkan</Text>
+                    <Text className='font-labelBold text-4xl text-primary6 mb-2'>{price} Poin</Text>
+                    <Text className='font-labelSemiBold text-xs'>Untuk {name}?</Text>
+
+                    <View className='flex-row mt-6'>
+                        <Pressable className='bg-primary6 py-2 rounded mr-2 flex-1' onPress={toggleModal}>
+                            <Text className='font-labelReguler text-[10px] text-white text-center' style={{ lineHeight: 12 }}>Batalkan</Text>
+                        </Pressable>
+
+                        <Pressable className='py-2 rounded flex-1 border border-primary6'
+                            onPress={() => {
+                                toggleModal()
+                                tukarPoin()
+                            }} >
+                            <Text className='font-labelReguler text-primary6 text-[10px] text-center' style={{ lineHeight: 12 }}>Ya</Text>
+                        </Pressable>
+
+                    </View>
+                </View>
+            </Modal >
 
             {/* TOP Display */}
             <View>
@@ -161,6 +223,8 @@ const HomeScreen = ({ navigation }) => {
                         />
 
                         <View>
+                            {/*  {userInfo.name} */}
+                            {/* {userInfo.phone} */}
                             <Text className="font-labelSemiBold text-xs text-white">Selamat Datang, {userInfo.name}</Text>
                             <Text className="font-labelReguler text-[8px] text-white" style={{ lineHeight: 12 }}>{userInfo.phone}</Text>
                         </View>
@@ -247,7 +311,7 @@ const HomeScreen = ({ navigation }) => {
                             ItemSeparatorComponent={FlatListItemSeparator}
                             showsHorizontalScrollIndicator={false}
                             showsVerticalScrollIndicator={false}
-                            renderItem={({ item }) => <ProdukCard gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukar={item.penukar} stok={item.stok} />}
+                            renderItem={({ item }) => <ProdukCard idProduk={item._id} gambar={item.gambar} kategori={item.kategori} nama={item.nama} harga={item.harga} penukar={item.penukar} stok={item.stok} />}
                         />
                     </View>
 

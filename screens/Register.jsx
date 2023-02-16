@@ -22,11 +22,15 @@ const Register = ({ navigation }) => {
                 password
             })
             console.log(response.data)
-            Alert.alert('daftar berhasil')
-            navigation.navigate('Login')
+            if (response.data.email !== 'user with this email already exists.') {
+                Alert.alert(`${response.data.email}`)
+            } else {
+                Alert.alert(`${response.data.email}`)
+                navigation.navigate('Login')
+            }
         }
         catch (error) {
-            console.log(`daftar gagal ${error}`)
+            console.log(`daftar gagal ${error.response}`)
             Alert.alert('daftar gagal')
         }
     }

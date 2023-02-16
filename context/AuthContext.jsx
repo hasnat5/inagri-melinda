@@ -22,6 +22,23 @@ export const AuthProvider = ({ children }) => {
     const login = (email, password) => {
         setIsLoading(true)
 
+
+
+        async function getInfo() {
+            try {
+                const response = await axios.post(`${BASE_URL}user/`, {
+                    jwt: userToken
+                })
+                console.log(response.data)
+                setUserInfo(response.data)
+                AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
+
+            } catch (error) {
+                Alert.alert('tolong login ulang')
+                console.error(error);
+            }
+        }
+
         async function getToken() {
             try {
                 const response = await axios.post(`${BASE_URL}login/`, {
@@ -38,23 +55,32 @@ export const AuthProvider = ({ children }) => {
             }
         }
 
-        const getInfo = async () => {
-            try {
-                const response = await axios.get(`${BASE_URL}user/`);
-                console.log(response.data)
-                setUserInfo(response.data)
-                AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
+        // const getInfo = async () => {
+        //     try {
+        //         const response = await axios.post(`${BASE_URL}user/`, {
+        //             // headers: {
+        //             //     'jwt': userToken,
+        //             //     'Accept': 'application/json'
+        //             // }
+        //             jwt: userToken
+        //         });
+        //         console.log(response.data)
+        //         setUserInfo(response.data)
+        //         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
 
-            } catch (error) {
-                getInfo()
-                // Alert.alert('tolong login ulang')
-                // console.error(error);
-            }
-        }
+        //     } catch (error) {
+        //         getInfo()
+        //         // Alert.alert('tolong login ulang')
+        //         // console.error(error);
+        //     }
+        // }
 
 
         getToken()
-        getInfo()
+
+        if (userToken !== null) {
+            getInfo()
+        }
 
         setIsLoading(false)
 
@@ -67,17 +93,17 @@ export const AuthProvider = ({ children }) => {
         AsyncStorage.removeItem('userInfo')
         AsyncStorage.removeItem('userToken')
 
-        axios.post(`${BASE_URL}logout/`, {
+        // axios.post(`${BASE_URL}logout/`, {
 
-        })
-            .then(res => {
-                console.log(res.data.message)
+        // })
+        //     .then(res => {
+        //         console.log(res.data.message)
 
-            })
-            .catch((error) => {
-                console.log(`login error ${error}`)
-                Alert.alert('logout gagal')
-            })
+        //     })
+        //     .catch((error) => {
+        //         console.log(`login error ${error}`)
+        //         Alert.alert('logout gagal')
+        //     })
 
 
         setIsLoading(false)
@@ -92,7 +118,7 @@ export const AuthProvider = ({ children }) => {
             userInfo = JSON.parse(userInfo)
 
 
-            if (userInfo) {
+            if (userToken) {
                 setUserToken(userToken)
                 setUserInfo(userInfo)
 
@@ -108,7 +134,6 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         isLoggedIn()
-
     }, [])
 
 

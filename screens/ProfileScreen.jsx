@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useState, useContext } from 'react'
-import { Pressable } from 'react-native'
-import { Image, View, Button, Text, ScrollView } from 'react-native'
+import { Image, View, Text, Alert, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AuthContext } from '../context/AuthContext';
 
@@ -26,7 +25,21 @@ const ProfileScreen = ({ navigation }) => {
             title: 'Profil',
             headerRight: () => (
                 <Pressable
-                    onPress={() => { logout() }}
+                    onPress={() => {
+                        Alert.alert(
+                            'Peringatan',
+                            'Anda yakin ingin keluar?',
+                            [
+                                {
+                                    text: 'Batal',
+                                    onPress: () => console.log('Cancel Pressed'),
+                                    style: 'cancel',
+                                },
+                                { text: 'Ya', onPress: () => logout() },
+                            ]
+                        );
+
+                    }}
                     title="Info"
                     color="#000"
                 >
